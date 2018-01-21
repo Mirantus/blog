@@ -11,6 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'ItemController@index');
+Route::get('/tag/{tag}', 'ItemController@tag');
+
+Route::resource('items', 'ItemController');
