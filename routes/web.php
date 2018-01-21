@@ -11,7 +11,13 @@
 |
 */
 
+Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');
+Route::post('/login', 'Auth\LoginController@login');
+Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+
 Route::get('/', 'ItemController@index');
 Route::get('/tag/{tag}', 'ItemController@tag');
 
 Route::resource('items', 'ItemController');
+
+Route::get('/home', 'HomeController@index')->name('home');
