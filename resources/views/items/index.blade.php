@@ -3,10 +3,12 @@
 @section('content')
     @include('items.tags')
     <hr>
-    {{--<div>--}}
-        {{--<hr>--}}
-        {{--<a href="{{ URL::to('/create') }}">добавить</a>--}}
-    {{--</div>--}}
+    @auth
+        <div>
+            <a href="{{ URL::to('/items/create') }}">добавить</a>
+            <hr>
+        </div>
+    @endauth
     @include('items.items')
 @endsection
 

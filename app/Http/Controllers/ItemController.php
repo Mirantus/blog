@@ -5,9 +5,18 @@ namespace App\Http\Controllers;
 use App\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
 
 class ItemController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth', ['except' => ['index','show', 'tag']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +25,7 @@ class ItemController extends Controller
     public function index()
     {
         // get all the nerds
-        $items = Item::all();
+        $items = Item::all()->where('published', 1);
 
         $tags = [];
         foreach ($items as $item) {
@@ -41,7 +50,7 @@ class ItemController extends Controller
      */
     public function create()
     {
-        //
+        return View::make('items.create');
     }
 
     /**
@@ -52,7 +61,33 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // validate
+        // read more on validation at http://laravel.com/docs/validation
+        $rules = array(
+            'title' => 'required',
+            'text' => 'required',
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        // process the login
+        if ($validator->fails()) {
+            return Redirect::to('items/create')
+                ->withErrors($validator)
+                ->withInput();
+        } else {
+            // store
+            $item = new Item;
+            $item->title = Input::get('title');
+            $item->text = Input::get('text');
+            $item->tags = Input::get('tags');
+            $item->published = Input::has('published');
+            $item->date = date('Y-m-d');
+            $item->save();
+
+            // redirect
+            Session::flash('message', 'Запись успешно добавлена');
+            return Redirect::to('items');
+        }
     }
 
     /**
@@ -110,7 +145,7 @@ class ItemController extends Controller
     public function tag(string $tag)
     {
         // get all the nerds
-        $items = Item::where('tags', 'like', '%' . $tag . '%')->get();
+        $items = Item::where('tags', 'like', '%' . $tag . '%')->where('published', 1)->get();
 
         // load the view and pass the nerds
         return View::make('items.tag', [
