@@ -105,12 +105,15 @@ class ItemController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Item  $item
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Item $item)
+    public function edit($id)
     {
-        //
+        $item = Item::find($id);
+
+        return View::make('items.edit')
+            ->with('item', $item);
     }
 
     /**
@@ -122,7 +125,31 @@ class ItemController extends Controller
      */
     public function update(Request $request, Item $item)
     {
-        //
+        // validate
+        // read more on validation at http://laravel.com/docs/validation
+        $rules = array(
+            'title' => 'required',
+            'text' => 'required',
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        // process the login
+        if ($validator->fails()) {
+            return Redirect::to('items/' . $item->id . '/edit')
+                ->withErrors($validator)
+                ->withInput();
+        } else {
+            // store
+            $item->title = Input::get('title');
+            $item->text = Input::get('text');
+            $item->tags = Input::get('tags');
+            $item->published = Input::has('published');
+            $item->save();
+
+            // redirect
+            Session::flash('message', 'Запись успешно сохранена');
+            return Redirect::to('items');
+        }
     }
 
     /**

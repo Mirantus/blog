@@ -2,11 +2,13 @@
     <div>
         <b><small>{{ $value->date }}</small></b><br>
         <a href="{{ URL::to('/items/' . $value->id) }}">{{ $value->title }}</a><br>
-        {{--<div>--}}
-        {{--<a href="{{ URL::to('/items/' . $value->id . '/edit') }}">редактировать</a>--}}
-        {{--&nbsp;&nbsp;--}}
-        {{--<a href="">удалить</a>--}}
-        {{--</div>--}}
+        @auth
+            <div>
+                <small><a href="{{ URL::to('/items/' . $value->id . '/edit') }}">редактировать</a></small>
+                {{--&nbsp;&nbsp;--}}
+                {{--<a href="">удалить</a>--}}
+            </div>
+        @endauth
         <hr>
     </div>
 @endforeach
