@@ -5,9 +5,14 @@
         @auth
             <div>
                 <small><a href="{{ URL::to('/items/' . $value->id . '/edit') }}">редактировать</a></small>
-                {{--&nbsp;&nbsp;--}}
-                {{--<a href="">удалить</a>--}}
+                &nbsp;&nbsp;
+                <small><a href="#" onclick="confirm('Действительно удалить?') ? document.forms.remove{{ $value->id  }}.submit() : null; return false;">удалить</a></small>
             </div>
+            <form name="remove{{ $value->id  }}" method="POST" action="/items/{{ $value->id  }}">
+                {{ csrf_field() }}
+
+                <input name="_method" type="hidden" value="DELETE">
+            </form>
         @endauth
         <hr>
     </div>

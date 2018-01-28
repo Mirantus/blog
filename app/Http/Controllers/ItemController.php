@@ -160,7 +160,11 @@ class ItemController extends Controller
      */
     public function destroy(Item $item)
     {
-        //
+        $item->delete();
+
+        // redirect
+        Session::flash('message', 'Запись успешно удалена');
+        return Redirect::to('items');
     }
 
     /**
