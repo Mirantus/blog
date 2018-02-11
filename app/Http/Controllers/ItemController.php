@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Item;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
@@ -24,8 +25,11 @@ class ItemController extends Controller
      */
     public function index()
     {
-        // get all the nerds
-        $items = Item::all()->where('published', 1);
+        $items = Item::orderBy('date', 'desc');
+        if (!Auth::check()) {
+            $items = $items->where('published', 1);
+        }
+        $items = $items->get();
 
         $tags = [];
         foreach ($items as $item) {
@@ -36,7 +40,6 @@ class ItemController extends Controller
         }
         $tags = array_unique($tags);
 
-        // load the view and pass the nerds
         return View::make('items.index', [
             'items' => $items,
             'tags' => $tags
@@ -175,10 +178,12 @@ class ItemController extends Controller
      */
     public function tag(string $tag)
     {
-        // get all the nerds
-        $items = Item::where('tags', 'like', '%' . $tag . '%')->where('published', 1)->get();
+        $items = Item::where('tags', 'like', '%' . $tag . '%')->orderBy('date', 'desc');
+        if (!Auth::check()) {
+            $items = $items->where('published', 1);
+        }
+        $items = $items->get();
 
-        // load the view and pass the nerds
         return View::make('items.tag', [
             'tag' => $tag,
             'items' => $items
