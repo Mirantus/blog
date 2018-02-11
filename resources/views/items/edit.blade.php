@@ -25,6 +25,8 @@
         <label for="tags">Метки</label>
         <textarea id="tags" name="tags" class="u-full-width">{{ old('tags', $item->tags) }}</textarea>
 
+        @include('items.tags_edit')
+
         <label>
             <input type="checkbox" name="published" {{ old('published', $item->published) ? 'checked' : '' }}> Опубликовать
         </label>

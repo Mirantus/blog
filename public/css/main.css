@@ -1,2 +1,6 @@
 @import 'normalize.css';
 @import 'skeleton.css';
+
+textarea {
+    height: 200px;
+}

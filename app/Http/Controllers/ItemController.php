@@ -31,18 +31,9 @@ class ItemController extends Controller
         }
         $items = $items->get();
 
-        $tags = [];
-        foreach ($items as $item) {
-            $item_tags = explode("\n", $item->tags);
-            foreach($item_tags as $item_tag) {
-                $tags[] = trim($item_tag);
-            }
-        }
-        $tags = array_unique($tags);
-
         return View::make('items.index', [
             'items' => $items,
-            'tags' => $tags
+            'tags' => $this->getTagsFromItems($items)
         ]);
     }
 
@@ -53,7 +44,12 @@ class ItemController extends Controller
      */
     public function create()
     {
-        return View::make('items.create');
+        $items = Item::all(['tags']);
+        $tags = $this->getTagsFromItems($items);
+
+        return View::make('items.create', [
+            'tags' => $tags
+        ]);
     }
 
     /**
@@ -114,9 +110,13 @@ class ItemController extends Controller
     public function edit($id)
     {
         $item = Item::find($id);
+        $items = Item::all(['tags']);
+        $tags = $this->getTagsFromItems($items);
 
-        return View::make('items.edit')
-            ->with('item', $item);
+        return View::make('items.edit', [
+            'item' => $item,
+            'tags' => $tags
+        ]);
     }
 
     /**
@@ -188,5 +188,16 @@ class ItemController extends Controller
             'tag' => $tag,
             'items' => $items
         ]);
+    }
+
+    private function getTagsFromItems($items) {
+        $tags = [];
+        foreach ($items as $item) {
+            $item_tags = explode("\n", $item->tags);
+            foreach($item_tags as $item_tag) {
+                $tags[] = trim($item_tag);
+            }
+        }
+        return array_unique($tags);
     }
 }
