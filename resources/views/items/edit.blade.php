@@ -34,4 +34,10 @@
         <br>
         <input class="button-primary" value="Сохранить" type="submit">
     </form>
+
+    <? $isHtml = strip_tags($item->text) != $item->text; ?>
+
+    @if($isHtml || $item->text == '')
+        @include('items.wysiwyg')
+    @endif
 @endsection

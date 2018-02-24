@@ -32,4 +32,6 @@
         <br>
         <input class="button-primary" value="Добавить" type="submit">
     </form>
+
+    @include('items.wysiwyg')
 @endsection
