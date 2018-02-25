@@ -20,4 +20,7 @@ Route::get('/tag/{tag}', 'ItemController@tag');
 
 Route::resource('items', 'ItemController');
 
+Route::get('upload', 'UploadController@index');
+Route::post('upload', 'UploadController@upload');
+
 Route::get('/home', 'HomeController@index')->name('home');
